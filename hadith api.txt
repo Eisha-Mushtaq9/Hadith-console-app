@@ -1,0 +1,76 @@
+import requests
+import json
+import os
+# from playsound import playsound
+
+BASE_URL ="https://hadithapi.com/api"
+API_KEY= "$2y$10$BylaBcXs5Lw7ZOtYmQ3PXO1x15zpp26oc1FeGktdmF6YeYoRd88e"
+
+#Functions to list all hadiths
+def list_hadiths_books():
+    response = requests.get(f"{BASE_URL}/books?apiKey={API_KEY}")
+    if response.status_code == 200:
+        books = response.json()['books']
+        for book in books:
+            print(f"{book['bookName']} {book['chapters_count']} ({book['hadiths_count']})")
+    else:
+        print("Error")
+
+def get_chapters(bookslug):
+    response = requests.get(f"{BASE_URL}/{bookslug}/chapters?apiKey={API_KEY}")
+    if response.status_code == 200:
+        chapters = response.json().get["chapters"]
+        for chapter in chapters:
+            print(f"{chapter['chapterNumber']}. {chapter['chapterArabic']}. {chapter['chapterUrdu']}. {chapter['chapterEnglish']}")
+    else:
+            print("Invalid")
+
+# Function to get hadiths
+def get_hadith(bookslug,chapter):
+    response = requests.get(f"{BASE_URL}/hadiths?apiKey={API_KEY}&book={bookslug}&chapter={chapter}&paginate=100000")
+    if response.status_code == 200:
+        hadiths = response.json()["hadiths"]['data']
+        for hadith in hadiths:
+	print(f"{hadith['hadithNumber']}. {hadith['hadithUrdu']}. {hadith['hadithEnglish']}")
+    else:
+        print("Error")
+
+
+
+# Main menu
+def main():
+    while True:
+        print("\nHADITH API APP")
+        print("1. List hadiths books")
+        print("2. Get chapters")
+        print("3. Get hadith ")
+        print("4. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            list_hadiths_books()
+        elif choice == "2":
+            bookslug = input("Enter chapter number: ")
+            get_chapters(chapter)
+        elif choice == "3":
+            book = input("Enter bookslug: ")
+            chapter = input("Enter chapter number: ")
+            get_hadith(bookslug=book,chapter=chapter)
+        elif choice == "4":
+            print("Exiting Hadith Api App. JazakAllah!")
+            break
+        else:
+            print("Invalid choice, please try again.")
+
+# Run the app
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
+
+
